@@ -1,0 +1,40 @@
+version: "3"
+services:
+    app:
+        image: php:8-fpm
+        container_name: practice-phpunit-app
+        volumes:
+            - ./src/:/var/www/html/src/
+            - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+        build:
+            context: ./
+            dockerfile: ./docker/php/Dockerfile
+    web:
+        image: nginx:latest
+        container_name: practice-phpunit-web
+        depends_on:
+            - php
+        ports:
+            - "80:80"
+        volumes:
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./src/:/var/www/html/src/
+    db:
+        container_name: practice-phpunit-db
+        build: 
+            context: ./
+            dockerfile: ./docker/mysql/Dockerfile
+        volumes:
+            - practice-phpunit:/var/lib/mysql
+    phpmyadmin:
+        depends_on:
+            - mysql
+        image: phpmyadmin/phpmyadmin
+        container_name: practice-phpunit-phpmyadmin
+        environment:
+          PMA_HOST: mysql
+        ports:
+          - "8080:80"
+
+volumes:
+    practice-phpunit:
