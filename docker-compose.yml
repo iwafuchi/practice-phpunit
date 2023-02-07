@@ -28,11 +28,11 @@ services:
             - practice-phpunit:/var/lib/mysql
     phpmyadmin:
         depends_on:
-            - mysql
+            - db
         image: phpmyadmin/phpmyadmin
         container_name: practice-phpunit-phpmyadmin
         environment:
-          PMA_HOST: mysql
+          PMA_HOST: db
         ports:
           - "8080:80"
 
